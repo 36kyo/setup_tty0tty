@@ -1,33 +1,30 @@
 #!/bin/bash
 
-DOWNLOADPATH=~/Downloads
+FILEPATH=~/Downloads
+NAME=tty0tty
+DIRNAME=tty0tty
+FILENAME=tty0tty_1.2.tar.xz
+MAKEPATH=$FILEPATH/$DIRNAME/module
+KONAME=tty0tty.ko
+INSTPATH=/dev/tnt*
 
-echo "> install tnt"
-echo "> cd ~/Downloads/tty0tty/module"
-cd ~/Downloads/tty0tty/module
-echo "> rm ./tty0tty.ko"
-rm ./tty0tty.ko
-echo "> make"
+echo "install tnt"
+set -x # print command option
+
+cd $FILEPATH
+pwd
+rm -r $DIRNAME
+tar xf $FILENAME
+cd $MAKEPATH
 make
-echo "> ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep tty0tty.ko"
-ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep tty0tty.ko
-echo "> sudo rm /lib/modules/$(uname -r)/kernel/drivers/misc/tty0tty.ko"
-sudo rm /lib/modules/$(uname -r)/kernel/drivers/misc/tty0tty.ko
-echo "> ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep tty0tty.ko"
-ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep tty0tty.ko
-echo "> sudo cp tty0tty.ko /lib/modules/$(uname -r)/kernel/drivers/misc/"
-sudo cp tty0tty.ko /lib/modules/$(uname -r)/kernel/drivers/misc/
-echo "> ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep tty0tty.ko"
-ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep tty0tty.ko
-echo "> sudo depmod"
+# ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep tty0tty.ko
+# sudo rm /lib/modules/$(uname -r)/kernel/drivers/misc/tty0tty.ko
+ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep $KONAME
+sudo cp $KONAME /lib/modules/$(uname -r)/kernel/drivers/misc/
+ls /lib/modules/$(uname -r)/kernel/drivers/misc/ | grep $KONAME
 sudo depmod
-echo "> sudo modprobe tty0tty"
-sudo modprobe tty0tty
-echo "> sudo chmod 666 /dev/tnt*"
-sudo chmod 666 /dev/tnt*
-echo "> cat /etc/modules"
-cat /etc/modules
-echo "> ls -la /dev/tnt*"
-ls -la /dev/tnt*
-echo "> cd -"
-cd -
+sudo modprobe $NAME
+sudo chmod 666 $INSTPATH
+# cat /etc/modules
+ls -la $INSTPATH
+# cd -
